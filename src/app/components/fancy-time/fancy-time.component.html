@@ -1,0 +1,15 @@
+<section>
+    <div *ngFor="let tz of zones" [pTooltip]="tz" tooltipPosition="right">{{dateTime | formatInTimezone:tz}}</div>
+
+    <p-button [style.display]="enableAddZone ? 'none' : 'block'" (click)="showAddZone()" icon="pi pi-plus" label="Add
+        Zone"></p-button>
+
+    <p-dialog [(visible)]="enableAddZone" header="Add Time Zone" [modal]="true" styleClass="p-fluid"
+        [contentStyle]="{ overflow: 'visible'}" (onHide)="[selectTz.clear()]">
+
+        <p-autoComplete #selectTz [suggestions]="zoneList" (completeMethod)="filterCountry($event)" [dropdown]="true"
+            [forceSelection]="true" (onSelect)="selectZone(selectTz, $event)"
+            placeholder="Enter a timezone"></p-autoComplete>
+    </p-dialog>
+
+</section>

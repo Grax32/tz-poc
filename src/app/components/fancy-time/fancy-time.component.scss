@@ -1,0 +1,22 @@
+section {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    div {
+        width: fit-content;
+    }
+}
+
+.isNotValid {
+    border: 2px solid red;
+}
+
+.isNotValid ::after {
+    content: "Invalid time zone";
+    color: red;
+    font-size: 0.8em;
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
