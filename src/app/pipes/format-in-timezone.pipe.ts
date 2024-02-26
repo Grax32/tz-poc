@@ -1,36 +1,58 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { format, utcToZonedTime, toDate } from 'date-fns-tz';
+import { UserPreferencesComponent } from '../components/user-preferences/user-preferences.component';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+
+const nbsp = '\u00A0';
 
 @Pipe({
     name: 'formatInTimezone'
 })
-export class FormatInTimezonePipe implements PipeTransform {
-    private format: string = 'yyyy-MM-dd h:mm a z';
+export class FormatInTimezonePipe implements PipeTransform, OnDestroy {
 
-    public transform(dateTime: string, zone: string): string {
+    private format: string = 'yyyy-MM-dd h:mm' + nbsp + 'a' + nbsp + 'z';
+    private destroy = new Subject<void>();
+
+    constructor(private userPreferencesComponent: UserPreferencesComponent) { }
+
+    ngOnDestroy(): void {
+        this.destroy.next();
+        this.destroy.complete();
+    }
+
+    public transform(dateTime: string): Observable<string> {
 
         if (!dateTime) {
-            return '';
+            const result = new Subject<string>();
+            result.next('');
+            return result.pipe(takeUntil(this.destroy));
         }
 
         if (dateTime.toLowerCase() === 'now') {
             dateTime = new Date().toISOString();
         }
 
-        const dt = toDate(dateTime);
-        if (dt.toString() === 'Invalid Date') {
-            return 'Invalid Date';
-        }
+        const result = this.userPreferencesComponent.selectedTimezone
+            .pipe(
+                takeUntil(this.destroy),
+                map(zone => {
 
+                    const dt = toDate(dateTime);
+                    if (dt.toString() === 'Invalid Date') {
+                        return 'Invalid Date';
+                    }
 
-        const zonedTime: Date = utcToZonedTime(dateTime, zone);
+                    const zonedTime: Date = utcToZonedTime(dateTime, zone);
 
-        if (isNaN(zonedTime as any)) {
-            return 'Invalid Time Zone ' + zone;
-        }
+                    if (isNaN(zonedTime as any)) {
+                        return 'Invalid Time Zone ' + zone;
+                    }
 
-        return format(zonedTime, this.format, { timeZone: zone });
+                    return format(zonedTime, this.format, { timeZone: zone });
+                })
+            );
 
+        return result;
     }
 }
 

@@ -1,12 +1,18 @@
 import { Component } from '@angular/core';
-import { IUserPreferences } from './interfaces/preferences.interface';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements IUserPreferences {
-    public name: string = 'John Doe (App Component)';
+export class AppComponent {
 
+    public container1show = true;
+    public container2show = false;
+
+    public time = (new Date()).toISOString();
+    public updateTime() {
+        this.time = (new Date()).toISOString();
+        console.log('time updated', this.time);
+    }
 }

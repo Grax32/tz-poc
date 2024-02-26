@@ -1,0 +1,3 @@
+<p-autoComplete [suggestions]="timezones" (completeMethod)="filterTimezones($event.query)" [dropdown]="true"
+    dropdownMode="blank" [forceSelection]="true" (onSelect)="selectTimezone($event.value)"
+    placeholder="Enter a timezone"></p-autoComplete>
