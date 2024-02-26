@@ -1,12 +1,14 @@
 <app-user-preferences class="topContainer">
     <div class="topContainerDetails">
         <app-user-preferences-editor></app-user-preferences-editor>
-        <h1>{{ time | formatInSpecifiedTimezone: 'UTC' }}</h1>
+        <p>
+            The top level user preferences component is set to the timezone <app-user-preferences-display></app-user-preferences-display>.
+        </p>
     </div>
 
     <div class="buttons">
-        <button pButton (click)="container1show = !container1show">Toggle Container 1</button>
-        <button pButton (click)="container2show = !container2show">Toggle Container 2</button>
+        <!--         <button pButton (click)="container1show = !container1show">Toggle Container 1</button>
+        <button pButton (click)="container2show = !container2show">Toggle Container 2</button> -->
         <button pButton (click)="updateTime()">Update Time to Now</button>
     </div>
 
@@ -15,24 +17,61 @@
             <h3>Container 1</h3>
             <app-user-preferences>
                 <app-user-preferences-editor></app-user-preferences-editor>
+
                 <div class="timeDisplay">
                     {{ time | formatInTimezone | async }}
                 </div>
+
+                <code ngNonBindable>{{ time | formatInTimezone | async }}</code>
+                <p>time is set set to an ISO 8601 string that looks like <code>{{ time }}</code>.</p>
+                <p>formatInTimezone is an async pipe that subscribes to the current timezone from the containing user
+                    preferences component
+                    and takes the time and formats it in the user's timezone.
+                </p>
+                <p>
+                    The async pipe is used to handle the fact that the
+                    timezone may change at any time, so this formatInTimezone pipe may emit multiple times as the
+                    timezone is updated
+                </p>
+                <p>
+                    The currently selected timezone for this block is <app-user-preferences-display></app-user-preferences-display>
+                </p>
             </app-user-preferences>
+            <hr />
+            <p>
+                The time below is outside of the above user preferences component, and therefore gets settings
+                from the top-level user preferences component.
+            </p>
+            <div class="timeDisplay">
+                {{ time | formatInTimezone | async}}
+            </div>
+            <hr />
+            <p>
+                The time below is formatted to a specified timezone, in this case UTC.
+            </p>
+            <div class="timeDisplay">
+                {{ time | formatInSpecifiedTimezone: 'UTC' }}
+            </div>
+        </section>
+
+        <section *ngIf="container2show">
+            <h3>Container 2</h3>
+            <app-user-preferences timezone="UTC">
+                <div class="timeDisplay">
+                    {{ time | formatInTimezone | async}}
+                </div>
+
+                <p>
+                    This time is contained in a user preferences component that has its timezone set to <app-user-preferences-display></app-user-preferences-display>.
+                </p>
+
+            </app-user-preferences>
+
         </section>
 
         <section *ngIf="!container1show">
             <h3>Container 1</h3>
             [HIDDEN]
-        </section>
-
-        <section *ngIf="container2show">
-            <h3>Container 2</h3>
-            <app-user-preferences>
-                <div class="timeDisplay">
-                    {{ time | formatInTimezone | async}}
-                </div>
-            </app-user-preferences>
         </section>
 
         <section *ngIf="!container2show">

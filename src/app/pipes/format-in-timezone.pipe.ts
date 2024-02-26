@@ -10,7 +10,7 @@ const nbsp = '\u00A0';
 })
 export class FormatInTimezonePipe implements PipeTransform, OnDestroy {
 
-    private format: string = 'yyyy-MM-dd h:mm' + nbsp + 'a' + nbsp + 'z';
+    private format: string = `yyyy${nbsp}MM${nbsp}dd h:mm${nbsp}a${nbsp}z`;
     private destroy = new Subject<void>();
 
     constructor(private userPreferencesComponent: UserPreferencesComponent) { }

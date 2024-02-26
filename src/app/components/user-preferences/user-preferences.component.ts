@@ -1,17 +1,21 @@
-import { Component, OnDestroy, Optional, SkipSelf } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, Optional, SimpleChanges, SkipSelf } from '@angular/core';
 import { TimeZoneService } from '../../services/timezone.service';
-import { BehaviorSubject, Subject, take, takeUntil, takeWhile } from 'rxjs';
+import { BehaviorSubject, Subject, takeUntil, takeWhile } from 'rxjs';
+
+const defaultTimezone = 'America/New_York';
 
 @Component({
     selector: 'app-user-preferences',
     templateUrl: './user-preferences.component.html',
     styleUrls: ['./user-preferences.component.scss']
 })
-export class UserPreferencesComponent implements OnDestroy {
+export class UserPreferencesComponent implements OnChanges, OnDestroy {
     private destroy = new Subject<void>();
 
+    @Input() timezone?: string;
+
     private hasTimezoneBeenSelected = false;
-    private _selectedTimezone = new BehaviorSubject<string>('America/New_York');
+    private _selectedTimezone = new BehaviorSubject<string>(defaultTimezone);
     public get selectedTimezone() {
         return this._selectedTimezone.asObservable();
     }
@@ -29,6 +33,12 @@ export class UserPreferencesComponent implements OnDestroy {
                     this._selectedTimezone.next(tz);
                 }
             });
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['timezone']) {
+            this.selectTimezone(this.timezone ?? defaultTimezone);
         }
     }
 

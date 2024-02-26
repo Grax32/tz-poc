@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
     public container1show = true;
-    public container2show = false;
+    public container2show = true;
 
     public time = (new Date()).toISOString();
     public updateTime() {

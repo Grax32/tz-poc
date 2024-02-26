@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { UserPreferencesComponent } from './components/user-preferences/user-preferences.component';
 import { UserPreferencesEditorComponent } from './components/user-preferences-editor/user-preferences-editor.component';
+import { UserPreferencesDisplayComponent } from './components/user-preferences-display/user-preferences-display.component';
 import { FormatInSpecifiedTimezonePipe } from './pipes/format-in-specified-timezone.pipe';
 
 @NgModule({
@@ -20,7 +21,8 @@ import { FormatInSpecifiedTimezonePipe } from './pipes/format-in-specified-timez
         FormatInTimezonePipe,
         FormatInSpecifiedTimezonePipe,
         UserPreferencesComponent,
-        UserPreferencesEditorComponent
+        UserPreferencesEditorComponent,
+        UserPreferencesDisplayComponent
     ],
     imports: [
         BrowserModule,
